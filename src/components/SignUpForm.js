@@ -10,8 +10,17 @@ function SignUpForm() {
   });
 
   const disable = formData.password !== formData.confirm;
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+      error: "",
+    });
+  };
 
   return (
     <div>
@@ -25,15 +34,17 @@ function SignUpForm() {
             onChange={handleChange}
             required
           />
+
           <label>Email</label>
           <input
-            type="email"
+            type="text"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
           />
-          <label>Password</label>
+
+          <label>password</label>
           <input
             type="password"
             name="password"
@@ -41,6 +52,7 @@ function SignUpForm() {
             onChange={handleChange}
             required
           />
+
           <label>Confirm</label>
           <input
             type="password"
@@ -49,11 +61,13 @@ function SignUpForm() {
             onChange={handleChange}
             required
           />
+
           <button type="submit" disabled={disable}>
             SIGN UP
           </button>
         </form>
       </div>
+
       <p className="error-message">{formData.error}</p>
     </div>
   );
