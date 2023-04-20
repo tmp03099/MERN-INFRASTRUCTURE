@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { signUp } from "../utilities/users-service";
 
 function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -10,9 +11,21 @@ function SignUpForm() {
   });
 
   const disable = formData.password !== formData.confirm;
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      console.log(formData);
+      // data send to back end to creat a new user
+      const userData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      };
+      // return a token with the user info
+      const user = await signUp(userData);
+    } catch (error) {
+      setFormData({ ...formData, error: "Sign Up Failed - Try Again" });
+    }
   };
   const handleChange = (event) => {
     setFormData({
