@@ -9,6 +9,7 @@ import * as usersApi from "./users-api";
 //* Get Token
 export function getToken() {
   const token = localStorage.getItem("token");
+  //if there is no token
   if (!token) return null;
 
   const payload = JSON.parse(atob(token.split(".")[1]));
@@ -30,6 +31,7 @@ export function getUser() {
   return token ? JSON.parse(atob(token.split(".")[1])).user : null;
 }
 
+//* Sign Up
 export async function signUp(userData) {
   // Delegate the network request code to the users-api.js API module
   // which will ultimately return a JSON Web Token (JWT)
@@ -39,4 +41,9 @@ export async function signUp(userData) {
   localStorage.setItem("token", token);
 
   return token;
+}
+
+//* LogOut
+export async function logOut() {
+  localStorage.removeItem("token");
 }
