@@ -10,7 +10,9 @@ import * as usersApi from "./users-api";
 export function getToken() {
   const token = localStorage.getItem("token");
   //if there is no token
-  if (!token) return null;
+  if (!token) {
+    return null;
+  }
 
   const payload = JSON.parse(atob(token.split(".")[1]));
   console.log(payload);
@@ -38,7 +40,9 @@ export async function signUp(userData) {
   // console.log('[From SignUP function]', userData);
   const token = await usersApi.signUp(userData);
   // saves token to localStorage
-  localStorage.setItem("token", token);
+  if (!token) {
+    localStorage.setItem("token", token);
+  }
 
   return token;
 }
