@@ -47,3 +47,10 @@ export async function signUp(userData) {
 export async function logOut() {
   localStorage.removeItem("token");
 }
+
+//* Login
+export async function login(userData) {
+  const token = await usersApi.login(userData);
+  localStorage.setItem("token", token);
+  return token;
+}

@@ -1,6 +1,7 @@
 //* Request handler Logic
 const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 //* /*-- Helper Functions --*/
 function createJWT(user) {
@@ -24,6 +25,29 @@ async function create(req, res) {
   }
 }
 
+async function login(req, res) {
+  try {
+    //* create a new user
+    const user = await User.findOne({ email: req.body.email });
+    console.log(user);
+
+    if (!user) throw new Error();
+
+    //* create a new bcrypt
+    const match = await bcrypt.compare(req.body.password, user.password);
+
+    if (!match) throw new Error();
+
+    //* creating a new jwt
+    const token = createJWT(user);
+    res.json(token);
+  } catch {
+    console.log(error);
+    res.status(400).json(error);
+  }
+}
+
 module.exports = {
   create,
+  login,
 };
