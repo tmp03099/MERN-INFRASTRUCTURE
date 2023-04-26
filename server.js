@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path"); //node module
 const favicon = require("serve-favicon");
 const logger = require("morgan");
+const ensureLoggedIn = require("./config/ensureLoggedIn");
 
 const app = express();
 // development port 3001
@@ -19,9 +20,14 @@ app.use(express.json());
 // to server from the production 'build' foler
 app.use(favicon(path.join(__dirname, "build", "favicon.ico")));
 app.use(express.static(path.join(__dirname, "build")));
+// checks if token was sent and sets a user data on the req (req.user)
+app.use(require("./config/checkToken"));
 
 //! All other routes
-app.use("/api/users/login", require("./routes/api/users"));
+app.use("/api/users", require("./routes/api/users"));
+app.use("/api/items", ensureLoggedIn, require("./routes/api/items"));
+app.use("/api/orders", ensureLoggedIn, require("./routes/api/orders"));
+
 // Put API routes here, before the "catch all" route
 
 // The following "catch all" route (note the *) is nessesary

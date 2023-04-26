@@ -1,27 +1,28 @@
+import { getToken } from "./users-service";
+
 // * The users-service.js module will definitely need to make AJAX requests to the Express server.
 
 //* SignUpForm.jsx <--> users-service.js <--> users-api.js <-Internet-> server.js (Express)
 
 //* handleSubmit <--> [signUp]-users-service <--> [signUp]-users-api <-Internet-> server.js (Express)
 
-const BASE_URL = "/api/users/login";
-export async function signUp(userData) {
-  const res = await fetch(BASE_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData), // makes the JS object to a string to be send over the internet
-  });
+const BASE_URL = "/api/users";
 
-  if (res.ok) {
-    return res.json(); // JWT Token
-  } else {
-    throw new Error("Invalid Sign Up!");
-  }
+// *Sign up
+export function signUp(userData) {
+  return sendRequest(BASE_URL, "POST", userData);
 }
 
+// *Log in
 export function login(credentials) {
   return sendRequest(`${BASE_URL}/login`, "POST", credentials);
 }
+
+//*Check Token
+export function checkToken() {
+  return sendRequest(`${BASE_URL}/check-token`);
+}
+/*--- Helper Functions ---*/
 
 async function sendRequest(url, method = "GET", payload = null) {
   // Fetch accepts an options object as the 2nd argument
@@ -31,4 +32,20 @@ async function sendRequest(url, method = "GET", payload = null) {
     options.headers = { "Content-Type": "application/json" };
     options.body = JSON.stringify(payload);
   }
+
+  //sends token to the backend
+  const token = getToken();
+
+  if (token) {
+    // Ensure the headers object exists
+    options.headers = options.headers || {};
+    // Add token to an Authorization header
+    // Prefacing with 'Bearer' is recommended in the HTTP specification
+    options.headers.Authorization = `Bearer ${token} `;
+  }
+
+  const res = await fetch(url, options);
+  // res.ok will be false if the status code set to 4xx in the controller action
+  if (res.ok) return res.json();
+  throw new Error("Bad Request");
 }

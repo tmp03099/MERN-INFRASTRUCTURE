@@ -40,11 +40,9 @@ export async function signUp(userData) {
   // console.log('[From SignUP function]', userData);
   const token = await usersApi.signUp(userData);
   // saves token to localStorage
-  if (!token) {
-    localStorage.setItem("token", token);
-  }
+  localStorage.setItem("token", token);
 
-  return token;
+  return getUser();
 }
 
 //* LogOut
@@ -53,8 +51,12 @@ export async function logOut() {
 }
 
 //* Login
-export async function login(userData) {
-  const token = await usersApi.login(userData);
+export async function login(credentials) {
+  const token = await usersApi.login(credentials);
   localStorage.setItem("token", token);
-  return token;
+  return getUser();
+}
+
+export async function checkToken() {
+  return usersApi.checkToken().then((dateStr) => new Date(dateStr));
 }

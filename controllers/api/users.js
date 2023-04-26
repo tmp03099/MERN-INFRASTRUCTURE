@@ -27,27 +27,36 @@ async function create(req, res) {
 
 async function login(req, res) {
   try {
-    //* create a new user
+    //find the user by email
     const user = await User.findOne({ email: req.body.email });
-    console.log(user);
+    //check if found an user
+    if (!user) {
+      throw Error("User not found!");
+    }
 
-    if (!user) throw new Error();
-
-    //* create a new bcrypt
+    //if the user exist: compare the password
     const match = await bcrypt.compare(req.body.password, user.password);
+    //check if password matched
+    if (!match) {
+      throw Error("Password not match!");
+    }
 
-    if (!match) throw new Error();
-
-    //* creating a new jwt
+    //if password is a match create a token
     const token = createJWT(user);
+    //send back a new token with user data in the payload
     res.json(token);
   } catch {
-    console.log(error);
-    res.status(400).json(error);
+    res.status(400).json("Bad Credentials");
   }
+}
+
+async function checkToken(req, res) {
+  console.log(req.user);
+  res.json(req.exp);
 }
 
 module.exports = {
   create,
   login,
+  checkToken,
 };
