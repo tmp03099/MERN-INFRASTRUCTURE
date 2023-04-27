@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { login } from "../utilities/users-service";
+import { login } from "../../utilities/users-service";
 
-export default function SignInForm({ setUser }) {
+export default function LoginForm({ setUser }) {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
+
   const [error, setError] = useState("");
 
   function handleChange(evt) {
@@ -21,6 +22,7 @@ export default function SignInForm({ setUser }) {
       // will resolve to the user object included in the
       // payload of the JSON Web Token (JWT)
       const user = await login(credentials);
+      console.log(user);
       setUser(user);
     } catch {
       setError("Log In Failed - Try Again");
@@ -39,6 +41,7 @@ export default function SignInForm({ setUser }) {
             onChange={handleChange}
             required
           />
+
           <label>Password</label>
           <input
             type="password"

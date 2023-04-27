@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const itemSchema = require("./itemSchema");
 
-//* Line Item schema
+//* LineItem Schema
 const lineItemSchema = new Schema(
   {
     qty: { type: Number, default: 1 },

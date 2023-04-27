@@ -1,4 +1,4 @@
-const item = require("./items");
+const item = require("./item");
 
 const Schema = require("mongoose").Schema;
 
